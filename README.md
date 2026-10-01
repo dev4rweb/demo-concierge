@@ -76,6 +76,7 @@ AI Concierge for business websites - a demonstration portfolio project showing i
    
    TELEGRAM_BOT_TOKEN=your_bot_token
    TELEGRAM_BOT_USERNAME=your_bot_username
+   TELEGRAM_WEBHOOK_SECRET=optional_random_string
    
    OPENROUTER_API_KEY=your_openrouter_key
    OPENROUTER_MODEL=deepseek/deepseek-chat-v3-0324:free
@@ -103,9 +104,16 @@ AI Concierge for business websites - a demonstration portfolio project showing i
 
 8. **Set Telegram webhook** (for production) or use polling for local development
    ```bash
+   # Without secret (basic)
    curl -X POST https://api.telegram.org/bot<YOUR_BOT_TOKEN>/setWebhook \
      -d "url=https://yourdomain.com/telegram/webhook"
+   
+   # With secret token (recommended for production)
+   curl -X POST https://api.telegram.org/bot<YOUR_BOT_TOKEN>/setWebhook \
+     -d "url=https://yourdomain.com/telegram/webhook" \
+     -d "secret_token=<YOUR_WEBHOOK_SECRET>"
    ```
+   **Note:** If using webhook secret, set `TELEGRAM_WEBHOOK_SECRET` in `.env` to the same value.
 
 ### Hostinger Deployment
 
@@ -122,9 +130,16 @@ AI Concierge for business websites - a demonstration portfolio project showing i
    ```
 5. **Configure webhook**
    ```bash
+   # Basic webhook
    curl -X POST https://api.telegram.org/bot<YOUR_BOT_TOKEN>/setWebhook \
      -d "url=https://demo-concierge.dev4rweb.com/telegram/webhook"
+   
+   # With secret token (recommended)
+   curl -X POST https://api.telegram.org/bot<YOUR_BOT_TOKEN>/setWebhook \
+     -d "url=https://demo-concierge.dev4rweb.com/telegram/webhook" \
+     -d "secret_token=<YOUR_WEBHOOK_SECRET>"
    ```
+   Set the same secret in `.env` as `TELEGRAM_WEBHOOK_SECRET`
 
 ### Admin Access
 
@@ -243,6 +258,7 @@ AI-консьерж для бизнес-сайтов - демонстрацио�
    
    TELEGRAM_BOT_TOKEN=токен_бота
    TELEGRAM_BOT_USERNAME=username_бота
+   TELEGRAM_WEBHOOK_SECRET=опциональная_случайная_строка
    
    OPENROUTER_API_KEY=ключ_openrouter
    OPENROUTER_MODEL=deepseek/deepseek-chat-v3-0324:free
@@ -270,9 +286,16 @@ AI-консьерж для бизнес-сайтов - демонстрацио�
 
 8. **Установить webhook** (для продакшена) или использовать polling для локальной разработки
    ```bash
+   # Без секрета (базовый)
    curl -X POST https://api.telegram.org/bot<ВАШ_ТОКЕН>/setWebhook \
      -d "url=https://ваш-домен.com/telegram/webhook"
+   
+   # С секретным токеном (рекомендуется для продакшена)
+   curl -X POST https://api.telegram.org/bot<ВАШ_ТОКЕН>/setWebhook \
+     -d "url=https://ваш-домен.com/telegram/webhook" \
+     -d "secret_token=<ВАШ_WEBHOOK_SECRET>"
    ```
+   **Примечание:** При использовании секрета установите `TELEGRAM_WEBHOOK_SECRET` в `.env` с тем же значением.
 
 ### Деплой на Hostinger
 
@@ -289,9 +312,16 @@ AI-консьерж для бизнес-сайтов - демонстрацио�
    ```
 5. **Настроить webhook**
    ```bash
+   # Базовый webhook
    curl -X POST https://api.telegram.org/bot<ВАШ_ТОКЕН>/setWebhook \
      -d "url=https://demo-concierge.dev4rweb.com/telegram/webhook"
+   
+   # С секретным токеном (рекомендуется)
+   curl -X POST https://api.telegram.org/bot<ВАШ_ТОКЕН>/setWebhook \
+     -d "url=https://demo-concierge.dev4rweb.com/telegram/webhook" \
+     -d "secret_token=<ВАШ_WEBHOOK_SECRET>"
    ```
+   Установите тот же секрет в `.env` как `TELEGRAM_WEBHOOK_SECRET`
 
 ### Доступ в админку
 

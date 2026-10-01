@@ -43,12 +43,16 @@ class TelegramService
         }
     }
 
-    public function setWebhook(string $url): bool
+    public function setWebhook(string $url, ?string $secretToken = null): bool
     {
         try {
-            $response = Http::post($this->apiUrl . '/setWebhook', [
-                'url' => $url,
-            ]);
+            $params = ['url' => $url];
+            
+            if ($secretToken) {
+                $params['secret_token'] = $secretToken;
+            }
+            
+            $response = Http::post($this->apiUrl . '/setWebhook', $params);
 
             return $response->successful();
         } catch (\Exception $e) {
