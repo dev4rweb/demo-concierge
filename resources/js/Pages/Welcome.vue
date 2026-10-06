@@ -74,7 +74,7 @@ defineProps({
                     </a>
 
                     <Link 
-                        :href="route('login')"
+                        :href="route('admin.dashboard')"
                         class="block bg-indigo-600 hover:bg-indigo-700 text-white rounded-xl shadow-lg p-8 text-center transition-all transform hover:scale-105"
                     >
                         <svg class="w-16 h-16 mx-auto mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
