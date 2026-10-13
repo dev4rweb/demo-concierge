@@ -9,46 +9,58 @@ class KnowledgeBaseSeeder extends Seeder
 {
     public function run(): void
     {
+        $legacyQuestions = [
+            'Какие услуги вы предоставляете?',
+            'Сколько стоят ваши услуги?',
+            'Как долго занимает разработка?',
+            'Какие технологии вы используете?',
+            'Как с вами связаться?',
+            'Предоставляете ли вы поддержку после запуска?',
+        ];
+
+        KnowledgeBase::query()->whereIn('question', $legacyQuestions)->delete();
+        KnowledgeBase::query()->where('answer', 'like', '%руб%')->delete();
+
         $knowledgeBase = [
             [
-                'category' => 'Услуги',
-                'question' => 'Какие услуги вы предоставляете?',
-                'answer' => 'Мы предоставляем разработку веб-приложений, создание сайтов, консультации по SaaS-решениям, интеграцию с API, создание Telegram-ботов и AI-интеграции.',
+                'category' => 'Services',
+                'question' => 'What services do you provide?',
+                'answer' => 'We design and build web applications, marketing sites, SaaS products, API integrations, Telegram bots, and AI concierge experiences for teams worldwide.',
                 'is_active' => true,
                 'sort_order' => 1,
             ],
             [
-                'category' => 'Услуги',
-                'question' => 'Сколько стоят ваши услуги?',
-                'answer' => 'Стоимость зависит от сложности проекта. Простой лендинг от 30 000 руб, корпоративный сайт от 80 000 руб, веб-приложение от 200 000 руб. Точную стоимость рассчитаем после обсуждения требований.',
+                'category' => 'Services',
+                'question' => 'How much do your services cost?',
+                'answer' => 'Pricing depends on scope. A simple landing page starts at $800, a corporate website from $2,000, and a custom web application from $5,000. Telegram bots typically start at $1,800. We confirm an exact quote after a short discovery call.',
                 'is_active' => true,
                 'sort_order' => 2,
             ],
             [
-                'category' => 'Процесс работы',
-                'question' => 'Как долго занимает разработка?',
-                'answer' => 'Простой сайт - 1-2 недели, корпоративный сайт - 3-4 недели, веб-приложение - от 1 до 3 месяцев в зависимости от функциональности.',
+                'category' => 'Process',
+                'question' => 'How long does development take?',
+                'answer' => 'A simple site usually takes 1–2 weeks, a corporate website 3–4 weeks, and a web application 1–3 months depending on features. A focused Telegram bot is often delivered in 3–5 weeks.',
                 'is_active' => true,
                 'sort_order' => 3,
             ],
             [
-                'category' => 'Процесс работы',
-                'question' => 'Какие технологии вы используете?',
-                'answer' => 'Laravel, Vue.js, React, Node.js, Python, PostgreSQL, MySQL, Redis, Docker. Выбор стека зависит от задач проекта.',
+                'category' => 'Process',
+                'question' => 'Which technologies do you use?',
+                'answer' => 'Laravel, Vue.js, React, Node.js, Python, PostgreSQL, MySQL, Redis, and Docker. The stack is chosen for the product, not the other way around.',
                 'is_active' => true,
                 'sort_order' => 4,
             ],
             [
-                'category' => 'Контакты',
-                'question' => 'Как с вами связаться?',
-                'answer' => 'Вы можете написать нам здесь в Telegram, оставить заявку на сайте или позвонить. Администратор свяжется с вами в ближайшее время.',
+                'category' => 'Contact',
+                'question' => 'How can I get in touch?',
+                'answer' => 'Write here in Telegram, leave a request on the website, or ask the bot to connect you with a manager. An administrator will follow up shortly.',
                 'is_active' => true,
                 'sort_order' => 5,
             ],
             [
-                'category' => 'Процесс работы',
-                'question' => 'Предоставляете ли вы поддержку после запуска?',
-                'answer' => 'Да, мы предоставляем техническую поддержку и сопровождение проектов. Есть разные тарифы: базовый (исправление критичных ошибок), стандарт (+ мелкие доработки), премиум (полное сопровождение и развитие).',
+                'category' => 'Process',
+                'question' => 'Do you provide support after launch?',
+                'answer' => 'Yes. Support plans: Basic (critical-fix coverage) from $250/month, Standard (small improvements included) from $600/month, and Premium (full care and product evolution) from $1,400/month.',
                 'is_active' => true,
                 'sort_order' => 6,
             ],
@@ -62,4 +74,3 @@ class KnowledgeBaseSeeder extends Seeder
         }
     }
 }
-

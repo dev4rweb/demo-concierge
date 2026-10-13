@@ -29,11 +29,30 @@ class HandleInertiaRequests extends Middleware
      */
     public function share(Request $request): array
     {
+        $locale = app()->getLocale();
+        $rtl = config('localization.rtl', ['ar']);
+        $hidden = config('localization.hidden_in_selector', []);
+
+        $selectorLocales = collect(config('localization.supported', []))
+            ->reject(fn (string $code): bool => in_array($code, $hidden, true))
+            ->map(fn (string $code): array => [
+                'code' => $code,
+                'name' => config("localization.names.$code", $code),
+                'flag' => config("localization.flag_codes.$code"),
+            ])
+            ->values()
+            ->all();
+
         return [
             ...parent::share($request),
             'auth' => [
                 'user' => $request->user(),
             ],
+            'locale' => $locale,
+            'routeLocale' => $request->route('locale'),
+            'dir' => in_array($locale, $rtl, true) ? 'rtl' : 'ltr',
+            'translations' => trans('app'),
+            'locales' => $selectorLocales,
         ];
     }
 }
