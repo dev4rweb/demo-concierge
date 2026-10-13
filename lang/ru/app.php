@@ -2,6 +2,11 @@
 
 return [
     'app_name' => 'AI Concierge',
+    'meta' => [
+        'title' => 'AI Concierge Demo',
+        'description' => 'AI-консьерж в Telegram с админ-панелью на Laravel: ответы из базы знаний, сбор лидов и передача сложных запросов человеку.',
+        'site_name' => 'AI Concierge Demo',
+    ],
     'nav' => [
         'dashboard' => 'Панель',
         'leads' => 'Лиды',

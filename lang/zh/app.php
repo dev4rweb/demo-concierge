@@ -2,6 +2,11 @@
 
 return [
     'app_name' => 'AI Concierge',
+    'meta' => [
+        'title' => 'AI Concierge Demo',
+        'description' => 'Telegram AI 礼宾助手与 Laravel 管理面板：依据知识库作答、收集线索，并将复杂问题转给人工。',
+        'site_name' => 'AI Concierge Demo',
+    ],
     'nav' => [
         'dashboard' => '仪表盘',
         'leads' => '线索',
