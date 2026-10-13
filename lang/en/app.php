@@ -2,6 +2,11 @@
 
 return [
     'app_name' => 'AI Concierge',
+    'meta' => [
+        'title' => 'AI Concierge Demo',
+        'description' => 'Telegram AI concierge with a Laravel admin panel: knowledge-base answers, lead capture, and human handoff.',
+        'site_name' => 'AI Concierge Demo',
+    ],
     'nav' => [
         'dashboard' => 'Dashboard',
         'leads' => 'Leads',

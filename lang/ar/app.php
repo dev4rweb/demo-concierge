@@ -2,6 +2,11 @@
 
 return [
     'app_name' => 'AI Concierge',
+    'meta' => [
+        'title' => 'AI Concierge Demo',
+        'description' => 'كونسيرج ذكاء اصطناعي على تيليغرام مع لوحة Laravel: إجابات من قاعدة المعرفة، جمع العملاء المحتملين، وتحويل الحالات الصعبة إلى شخص.',
+        'site_name' => 'AI Concierge Demo',
+    ],
     'nav' => [
         'dashboard' => 'لوحة التحكم',
         'leads' => 'العملاء المحتملون',

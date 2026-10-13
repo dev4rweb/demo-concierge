@@ -8,6 +8,27 @@
 
         <title inertia>{{ config('app.name', 'AI Concierge Demo') }}</title>
 
+        @php
+            $ogTitle = __('app.meta.title');
+            $ogDescription = __('app.meta.description');
+            $ogSiteName = __('app.meta.site_name');
+            $ogImage = 'https://demo-concierge.dev4rweb.com/og-image.jpg';
+            $ogUrl = url()->current();
+        @endphp
+        <meta name="description" content="{{ $ogDescription }}">
+        <meta property="og:title" content="{{ $ogTitle }}">
+        <meta property="og:description" content="{{ $ogDescription }}">
+        <meta property="og:image" content="{{ $ogImage }}">
+        <meta property="og:image:width" content="1200">
+        <meta property="og:image:height" content="630">
+        <meta property="og:url" content="{{ $ogUrl }}">
+        <meta property="og:type" content="website">
+        <meta property="og:site_name" content="{{ $ogSiteName }}">
+        <meta name="twitter:card" content="summary_large_image">
+        <meta name="twitter:title" content="{{ $ogTitle }}">
+        <meta name="twitter:description" content="{{ $ogDescription }}">
+        <meta name="twitter:image" content="{{ $ogImage }}">
+
         <link rel="icon" href="/favicon.svg" type="image/svg+xml">
         <link rel="icon" href="/favicon-32x32.png" type="image/png" sizes="32x32">
         <link rel="apple-touch-icon" href="/apple-touch-icon.png" sizes="180x180">
