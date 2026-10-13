@@ -20,6 +20,9 @@
 /storage/*.key
 /storage/pail
 /vendor
+/test-results/
+/playwright-report/
+/blob-report/
 _ide_helper.php
 Homestead.json
 Homestead.yaml
