@@ -2,6 +2,7 @@
 
 namespace App\Http\Middleware;
 
+use App\Support\PageSeo;
 use Illuminate\Http\Request;
 use Inertia\Middleware;
 
@@ -53,6 +54,11 @@ class HandleInertiaRequests extends Middleware
             'dir' => in_array($locale, $rtl, true) ? 'rtl' : 'ltr',
             'translations' => trans('app'),
             'locales' => $selectorLocales,
+            'seo' => PageSeo::forRequest($request),
+            'demo' => [
+                'email' => config('services.demo.admin_email', 'admin@demo.local'),
+                'password' => config('services.demo.admin_password', 'demo123456'),
+            ],
         ];
     }
 }

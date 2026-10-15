@@ -64,6 +64,18 @@ for (const theme of themes) {
         await shot(page, `howto-ar-${theme}-${width}`);
       });
 
+      test(`about-en`, async ({ page }) => {
+        await page.goto('/about');
+        await page.waitForSelector('h1');
+        await shot(page, `about-en-${theme}-${width}`);
+      });
+
+      test(`about-ar`, async ({ page }) => {
+        await page.goto('/ar/about');
+        await page.waitForSelector('h1');
+        await shot(page, `about-ar-${theme}-${width}`);
+      });
+
       test(`admin pages`, async ({ page }) => {
         await login(page);
         await shot(page, `dashboard-${theme}-${width}`);

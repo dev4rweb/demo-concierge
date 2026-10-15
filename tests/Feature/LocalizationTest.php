@@ -67,5 +67,9 @@ class LocalizationTest extends TestCase
     {
         $this->get('/es/login')->assertOk();
         $this->get('/zh/how-to')->assertOk();
+        $this->get('/pt/about')->assertOk()->assertInertia(fn ($page) => $page
+            ->component('About')
+            ->where('locale', 'pt')
+        );
     }
 }

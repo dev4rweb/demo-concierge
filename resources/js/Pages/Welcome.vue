@@ -1,8 +1,7 @@
 <script setup>
-import ApplicationLogo from '@/Components/ApplicationLogo.vue';
-import LocaleSwitcher from '@/Components/LocaleSwitcher.vue';
-import ThemeToggle from '@/Components/ThemeToggle.vue';
-import { Head, Link } from '@inertiajs/vue3';
+import PublicLayout from '@/Layouts/PublicLayout.vue';
+import { Head, Link, usePage } from '@inertiajs/vue3';
+import { computed } from 'vue';
 import { useI18n } from '@/composables/useI18n';
 
 defineProps({
@@ -10,29 +9,16 @@ defineProps({
 });
 
 const { t, locRoute } = useI18n();
-
+const page = usePage();
+const demo = computed(() => page.props.demo || {});
 const stack = ['Laravel', 'Vue 3', 'Inertia.js', 'Tailwind CSS', 'Telegram Bot API', 'OpenRouter AI', 'MySQL'];
 </script>
 
 <template>
-    <Head :title="t('welcome.title')" />
+    <PublicLayout>
+        <Head :title="t('welcome.title')" />
 
-    <div class="min-h-screen">
-        <header class="mx-auto flex max-w-6xl items-center justify-between gap-3 px-4 py-5 sm:px-6">
-            <Link :href="locRoute('welcome')" class="flex items-center gap-2">
-                <ApplicationLogo class="h-9 w-9" />
-                <span class="text-sm font-semibold tracking-tight">{{ t('app_name') }}</span>
-            </Link>
-            <div class="flex items-center gap-2">
-                <Link :href="locRoute('guide')" class="hidden rounded-full px-3 py-2 text-sm text-muted transition hover:text-ink sm:inline">
-                    {{ t('nav.guide') }}
-                </Link>
-                <ThemeToggle />
-                <LocaleSwitcher />
-            </div>
-        </header>
-
-        <main class="mx-auto max-w-6xl px-4 pb-16 sm:px-6">
+        <main class="mx-auto max-w-6xl px-4 pb-8 sm:px-6">
             <section class="mx-auto max-w-3xl py-8 text-center sm:py-14">
                 <p class="mb-3 text-xs font-semibold uppercase tracking-[0.22em] text-accent">Portfolio demo</p>
                 <h1 class="text-balance text-4xl font-semibold tracking-tight text-ink sm:text-5xl">
@@ -67,6 +53,7 @@ const stack = ['Laravel', 'Vue 3', 'Inertia.js', 'Tailwind CSS', 'Telegram Bot A
                     v-if="botUsername"
                     :href="`https://t.me/${botUsername}`"
                     target="_blank"
+                    rel="noopener noreferrer"
                     class="soft-ring surface-card block p-6 text-center"
                 >
                     <h3 class="text-xl font-semibold text-ink">{{ t('welcome.open_bot') }}</h3>
@@ -78,7 +65,12 @@ const stack = ['Laravel', 'Vue 3', 'Inertia.js', 'Tailwind CSS', 'Telegram Bot A
                     <p class="mt-2 text-sm text-muted">{{ t('welcome.admin_panel_hint') }}</p>
                 </Link>
 
-                <Link :href="locRoute('guide')" class="soft-ring surface-card block p-6 text-center sm:col-span-2">
+                <Link :href="locRoute('about')" class="soft-ring surface-card block p-6 text-center">
+                    <h3 class="text-xl font-semibold text-ink">{{ t('welcome.product') }}</h3>
+                    <p class="mt-2 text-sm text-muted">{{ t('welcome.product_hint') }}</p>
+                </Link>
+
+                <Link :href="locRoute('guide')" class="soft-ring surface-card block p-6 text-center">
                     <h3 class="text-xl font-semibold text-ink">{{ t('welcome.how_to') }}</h3>
                     <p class="mt-2 text-sm text-muted">{{ t('welcome.how_to_hint') }}</p>
                 </Link>
@@ -87,15 +79,15 @@ const stack = ['Laravel', 'Vue 3', 'Inertia.js', 'Tailwind CSS', 'Telegram Bot A
             <aside class="mx-auto mt-6 max-w-3xl rounded-2xl border border-line bg-surface/70 px-5 py-4 text-center text-sm text-muted">
                 <p class="mb-1">
                     <strong class="text-ink">{{ t('welcome.demo_credentials') }}:</strong>
-                    admin@demo.local / demo123456
+                    {{ demo.email }} / {{ demo.password }}
                 </p>
                 <p>
                     GitHub:
-                    <a href="https://github.com/dev4rweb/demo-concierge" class="text-accent underline-offset-2 hover:underline" target="_blank">
+                    <a href="https://github.com/dev4rweb/demo-concierge" class="text-accent underline-offset-2 hover:underline" target="_blank" rel="noopener noreferrer">
                         dev4rweb/demo-concierge
                     </a>
                 </p>
             </aside>
         </main>
-    </div>
+    </PublicLayout>
 </template>
