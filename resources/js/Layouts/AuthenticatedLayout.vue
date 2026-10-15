@@ -35,7 +35,10 @@ const showingNavigationDropdown = ref(false);
                             <NavLink :href="locRoute('admin.knowledge-base.index')" :active="route().current('admin.knowledge-base.*')">
                                 {{ t('nav.knowledge_base') }}
                             </NavLink>
-                            <NavLink :href="locRoute('guide')" :active="route().current('guide')">
+                            <NavLink :href="locRoute('about')" :active="route().current('about') || route().current('locale.about')">
+                                {{ t('nav.about') }}
+                            </NavLink>
+                            <NavLink :href="locRoute('guide')" :active="route().current('guide') || route().current('locale.guide')">
                                 {{ t('nav.guide') }}
                             </NavLink>
                         </div>
@@ -108,7 +111,10 @@ const showingNavigationDropdown = ref(false);
                     <ResponsiveNavLink :href="locRoute('admin.knowledge-base.index')" :active="route().current('admin.knowledge-base.*')">
                         {{ t('nav.knowledge_base') }}
                     </ResponsiveNavLink>
-                    <ResponsiveNavLink :href="locRoute('guide')" :active="route().current('guide')">
+                    <ResponsiveNavLink :href="locRoute('about')" :active="route().current('about') || route().current('locale.about')">
+                        {{ t('nav.about') }}
+                    </ResponsiveNavLink>
+                    <ResponsiveNavLink :href="locRoute('guide')" :active="route().current('guide') || route().current('locale.guide')">
                         {{ t('nav.guide') }}
                     </ResponsiveNavLink>
                 </div>

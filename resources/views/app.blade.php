@@ -9,25 +9,30 @@
         <title inertia>{{ config('app.name', 'AI Concierge Demo') }}</title>
 
         @php
-            $ogTitle = __('app.meta.title');
-            $ogDescription = __('app.meta.description');
+            $ogTitle = $page['props']['seo']['title'] ?? __('app.meta.title');
+            $ogDescription = $page['props']['seo']['description'] ?? __('app.meta.description');
             $ogSiteName = __('app.meta.site_name');
             $ogImage = 'https://demo-concierge.dev4rweb.com/og-image.jpg';
             $ogUrl = url()->current();
+            $hreflangUrls = \App\Support\PageSeo::alternateUrls(request());
         @endphp
-        <meta name="description" content="{{ $ogDescription }}">
-        <meta property="og:title" content="{{ $ogTitle }}">
-        <meta property="og:description" content="{{ $ogDescription }}">
-        <meta property="og:image" content="{{ $ogImage }}">
+        <meta data-inertia="description" name="description" content="{{ $ogDescription }}">
+        <meta data-inertia="og:title" property="og:title" content="{{ $ogTitle }}">
+        <meta data-inertia="og:description" property="og:description" content="{{ $ogDescription }}">
+        <meta data-inertia="og:image" property="og:image" content="{{ $ogImage }}">
         <meta property="og:image:width" content="1200">
         <meta property="og:image:height" content="630">
-        <meta property="og:url" content="{{ $ogUrl }}">
+        <meta data-inertia="og:url" property="og:url" content="{{ $ogUrl }}">
         <meta property="og:type" content="website">
         <meta property="og:site_name" content="{{ $ogSiteName }}">
         <meta name="twitter:card" content="summary_large_image">
-        <meta name="twitter:title" content="{{ $ogTitle }}">
-        <meta name="twitter:description" content="{{ $ogDescription }}">
-        <meta name="twitter:image" content="{{ $ogImage }}">
+        <meta data-inertia="twitter:title" name="twitter:title" content="{{ $ogTitle }}">
+        <meta data-inertia="twitter:description" name="twitter:description" content="{{ $ogDescription }}">
+        <meta data-inertia="twitter:image" name="twitter:image" content="{{ $ogImage }}">
+        @foreach ($hreflangUrls as $alternate)
+            <link rel="alternate" hreflang="{{ $alternate['code'] }}" href="{{ $alternate['url'] }}">
+        @endforeach
+        <link rel="alternate" hreflang="x-default" href="{{ \App\Support\PageSeo::localizedUrl(\App\Support\PageSeo::unprefixedPath(request()), config('localization.default', 'en')) }}">
 
         <link rel="icon" href="/favicon.svg" type="image/svg+xml">
         <link rel="icon" href="/favicon-32x32.png" type="image/png" sizes="32x32">
