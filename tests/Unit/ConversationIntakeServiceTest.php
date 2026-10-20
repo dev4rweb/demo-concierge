@@ -3,6 +3,7 @@
 namespace Tests\Unit;
 
 use App\Services\ConversationIntakeService;
+use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\TestCase;
 
 class ConversationIntakeServiceTest extends TestCase
@@ -26,7 +27,69 @@ class ConversationIntakeServiceTest extends TestCase
     public function test_falls_back_to_telegram_language_code_for_start(): void
     {
         $this->assertSame('fr', $this->service->detectLanguage('/start', 'fr'));
+        $this->assertSame('ru', $this->service->detectLanguage('/start', 'ru-RU'));
+        $this->assertSame('zh', $this->service->detectLanguage('/start', 'zh-Hans'));
         $this->assertSame('en', $this->service->detectLanguage('/start', 'xx'));
+        $this->assertSame('en', $this->service->detectLanguage('/start', 'de'));
+    }
+
+    /**
+     * @return list<array{0: string, 1: list<string>}>
+     */
+    public static function welcomeLanguageProvider(): array
+    {
+        return [
+            ['en', ['hotels', 'hours', 'prices', 'services', 'directions', 'manager', 'человек']],
+            ['ru', ['отелей', 'часы', 'цены', 'услуги', 'добраться', 'manager', 'человек']],
+            ['zh', ['酒店', '营业时间', '价格', '服务', '路线', 'manager', 'человек']],
+            ['fr', ['hôtels', 'horaires', 'prix', 'services', 'itinéraire', 'manager', 'человек']],
+            ['es', ['hoteles', 'horarios', 'precios', 'servicios', 'llegar', 'manager', 'человек']],
+            ['ar', ['فنادق', 'ساعات العمل', 'الأسعار', 'الخدمات', 'الاتجاهات', 'manager', 'человек']],
+            ['pt', ['hotéis', 'horários', 'preços', 'serviços', 'indicações', 'manager', 'человек']],
+        ];
+    }
+
+    /**
+     * @param  list<string>  $needles
+     */
+    #[DataProvider('welcomeLanguageProvider')]
+    public function test_welcome_message_covers_intro_topics_and_handoff(string $language, array $needles): void
+    {
+        $message = $this->service->welcomeMessage($language);
+
+        foreach ($needles as $needle) {
+            $this->assertStringContainsString($needle, $message);
+        }
+    }
+
+    public function test_unknown_welcome_language_falls_back_to_english(): void
+    {
+        $this->assertSame(
+            $this->service->welcomeMessage('en'),
+            $this->service->welcomeMessage('de')
+        );
+    }
+
+    public function test_welcome_keyboard_links_demo_admin_and_company_site(): void
+    {
+        $keyboard = $this->service->welcomeKeyboard('en');
+
+        $this->assertSame('Open demo site', $keyboard['inline_keyboard'][0][0]['text']);
+        $this->assertSame('https://demo-concierge.dev4rweb.com', $keyboard['inline_keyboard'][0][0]['url']);
+        $this->assertSame('Admin panel', $keyboard['inline_keyboard'][0][1]['text']);
+        $this->assertSame('https://demo-concierge.dev4rweb.com/login', $keyboard['inline_keyboard'][0][1]['url']);
+        $this->assertSame('dev4rweb.com', $keyboard['inline_keyboard'][1][0]['text']);
+        $this->assertSame('https://dev4rweb.com', $keyboard['inline_keyboard'][1][0]['url']);
+    }
+
+    public function test_welcome_keyboard_localizes_demo_urls(): void
+    {
+        $keyboard = $this->service->welcomeKeyboard('ru');
+
+        $this->assertSame('Открыть демо', $keyboard['inline_keyboard'][0][0]['text']);
+        $this->assertSame('https://demo-concierge.dev4rweb.com/ru', $keyboard['inline_keyboard'][0][0]['url']);
+        $this->assertSame('https://demo-concierge.dev4rweb.com/ru/login', $keyboard['inline_keyboard'][0][1]['url']);
+        $this->assertSame('https://dev4rweb.com', $keyboard['inline_keyboard'][1][0]['url']);
     }
 
     public function test_mentions_human_in_multiple_languages(): void
