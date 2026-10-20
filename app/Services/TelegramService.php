@@ -20,11 +20,17 @@ class TelegramService
     public function sendMessage(string $chatId, string $text, array $options = []): ?array
     {
         try {
-            $response = Http::post($this->apiUrl.'/sendMessage', array_merge([
+            $payload = array_merge([
                 'chat_id' => $chatId,
                 'text' => $text,
                 'parse_mode' => 'HTML',
-            ], $options));
+            ], $options);
+
+            if (isset($payload['reply_markup']) && is_array($payload['reply_markup'])) {
+                $payload['reply_markup'] = json_encode($payload['reply_markup'], JSON_UNESCAPED_UNICODE);
+            }
+
+            $response = Http::post($this->apiUrl.'/sendMessage', $payload);
 
             if ($response->successful()) {
                 return $response->json();

@@ -3,6 +3,7 @@
 namespace Tests\Feature;
 
 use App\Models\Conversation;
+use App\Services\ConversationIntakeService;
 use App\Services\OpenRouterService;
 use App\Services\TelegramService;
 use Illuminate\Foundation\Testing\RefreshDatabase;
@@ -29,6 +30,50 @@ class TelegramWebhookTest extends TestCase
         $this->assertDatabaseCount('conversations', 1);
         $this->assertDatabaseCount('leads', 0);
         $this->assertDatabaseHas('messages', ['role' => 'assistant']);
+    }
+
+    public function test_start_command_sends_localized_welcome_and_inline_keyboard(): void
+    {
+        $intake = app(ConversationIntakeService::class);
+        $welcome = $intake->welcomeMessage('ru');
+        $keyboard = $intake->welcomeKeyboard('ru');
+
+        $this->mock(TelegramService::class, function ($mock) use ($welcome, $keyboard): void {
+            $mock->shouldReceive('sendMessage')
+                ->once()
+                ->withArgs(function (int|string $chatId, string $text, array $options = []) use ($welcome, $keyboard): bool {
+                    return (string) $chatId === '4242'
+                        && $text === $welcome
+                        && ($options['reply_markup'] ?? null) === $keyboard;
+                })
+                ->andReturn(['ok' => true]);
+        });
+
+        $this->postJson('/telegram/webhook', $this->telegramUpdate('/start', 'ru'))
+            ->assertOk();
+
+        $this->assertDatabaseHas('messages', [
+            'role' => 'assistant',
+            'content' => $welcome,
+        ]);
+    }
+
+    public function test_start_falls_back_to_english_for_unknown_language_code(): void
+    {
+        $welcome = app(ConversationIntakeService::class)->welcomeMessage('en');
+
+        $this->mock(TelegramService::class, function ($mock) use ($welcome): void {
+            $mock->shouldReceive('sendMessage')
+                ->once()
+                ->withArgs(function (string $chatId, string $text, array $options = []) use ($welcome): bool {
+                    return $text === $welcome
+                        && isset($options['reply_markup']['inline_keyboard']);
+                })
+                ->andReturn(['ok' => true]);
+        });
+
+        $this->postJson('/telegram/webhook', $this->telegramUpdate('/start', 'de'))
+            ->assertOk();
     }
 
     public function test_plain_question_does_not_create_a_lead(): void

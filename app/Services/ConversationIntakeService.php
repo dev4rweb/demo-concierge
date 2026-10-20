@@ -65,7 +65,7 @@ class ConversationIntakeService
         }
 
         $code = strtolower(substr((string) $telegramLanguageCode, 0, 2));
-        $known = ['en', 'zh', 'fr', 'es', 'ar', 'pt', 'ru', 'uk', 'de', 'it'];
+        $known = ['en', 'zh', 'fr', 'es', 'ar', 'pt', 'ru'];
 
         return in_array($code, $known, true) ? $code : 'en';
     }
@@ -116,14 +116,42 @@ class ConversationIntakeService
     public function welcomeMessage(string $language): string
     {
         return match ($language) {
-            'ru' => "Здравствуйте! 👋\n\nЯ AI-консьерж демо-приложения. Я могу:\n• Ответить на вопросы о компании\n• Собрать вашу контактную информацию\n• Связать вас с администратором\n\nЧем могу помочь?",
-            'zh' => "您好！👋\n\n我是演示应用的 AI 礼宾助手。我可以：\n• 回答关于公司的问题\n• 收集您的联系方式\n• 为您转接管理员\n\n有什么可以帮您？",
-            'fr' => "Bonjour ! 👋\n\nJe suis le concierge IA de cette démo. Je peux :\n• Répondre aux questions sur l’entreprise\n• Recueillir vos coordonnées\n• Vous mettre en relation avec un administrateur\n\nComment puis-je vous aider ?",
-            'es' => "¡Hola! 👋\n\nSoy el conserje de IA de esta demo. Puedo:\n• Responder preguntas sobre la empresa\n• Recoger sus datos de contacto\n• Conectarle con un administrador\n\n¿En qué puedo ayudarle?",
-            'ar' => "مرحباً! 👋\n\nأنا كونسيرج الذكاء الاصطناعي لهذا العرض التجريبي. يمكنني:\n• الإجابة عن أسئلة الشركة\n• جمع بيانات التواصل\n• توصيلك بمدير\n\nكيف يمكنني مساعدتك؟",
-            'pt' => "Olá! 👋\n\nSou o concierge de IA desta demonstração. Posso:\n• Responder perguntas sobre a empresa\n• Recolher os seus contactos\n• Ligá-lo a um administrador\n\nComo posso ajudar?",
-            default => "Hello! 👋\n\nI am the AI concierge for this demo. I can:\n• Answer questions about the company\n• Collect your contact details\n• Connect you with an administrator\n\nHow can I help?",
+            'ru' => "Здравствуйте! 👋\n\nЯ демо AI-консьержа для отелей и сервисного бизнеса.\n\nСпросите про часы работы, цены, услуги или как добраться.\n\nНужен человек? Напишите manager или человек — передам запрос специалисту.",
+            'zh' => "您好！👋\n\n我是面向酒店及服务行业的 AI 礼宾演示助手。\n\n您可以询问营业时间、价格、服务或路线。\n\n需要人工？发送 manager 或 человек，我会为您转接真人。",
+            'fr' => "Bonjour ! 👋\n\nJe suis la démo du concierge IA pour les hôtels et les entreprises de services.\n\nDemandez les horaires, les prix, les services ou l’itinéraire.\n\nBesoin d’une personne ? Tapez manager ou человек et je transmettrai à un humain.",
+            'es' => "¡Hola! 👋\n\nSoy la demo del conserje de IA para hoteles y negocios de servicios.\n\nPregunte por horarios, precios, servicios o cómo llegar.\n\n¿Necesita a una persona? Escriba manager o человек y le pasaré con un humano.",
+            'ar' => "مرحباً! 👋\n\nأنا عرض تجريبي لكونسيرج الذكاء الاصطناعي للفنادق وشركات الخدمات.\n\nاسأل عن ساعات العمل أو الأسعار أو الخدمات أو الاتجاهات.\n\nتحتاج شخصاً؟ اكتب manager أو человек وسأحوّلك إلى موظف بشري.",
+            'pt' => "Olá! 👋\n\nSou a demonstração do concierge de IA para hotéis e negócios de serviços.\n\nPergunte sobre horários, preços, serviços ou indicações.\n\nPrecisa de uma pessoa? Escreva manager ou человек e eu encaminho para um humano.",
+            default => "Hello! 👋\n\nI'm an AI concierge demo for hotels and service businesses.\n\nAsk me about hours, prices, services, or directions.\n\nNeed a person? Type manager or человек and I'll connect you with a human.",
         };
+    }
+
+    /**
+     * @return array{inline_keyboard: list<list<array{text: string, url: string}>>}
+     */
+    public function welcomeKeyboard(string $language): array
+    {
+        [$demoLabel, $adminLabel] = match ($language) {
+            'ru' => ['Открыть демо', 'Админ-панель'],
+            'zh' => ['打开演示站点', '管理面板'],
+            'fr' => ['Ouvrir la démo', 'Panneau admin'],
+            'es' => ['Abrir la demo', 'Panel de admin'],
+            'ar' => ['فتح الموقع التجريبي', 'لوحة التحكم'],
+            'pt' => ['Abrir a demo', 'Painel admin'],
+            default => ['Open demo site', 'Admin panel'],
+        };
+
+        return [
+            'inline_keyboard' => [
+                [
+                    ['text' => $demoLabel, 'url' => $this->localizedDemoUrl('/', $language)],
+                    ['text' => $adminLabel, 'url' => $this->localizedDemoUrl('/login', $language)],
+                ],
+                [
+                    ['text' => 'dev4rweb.com', 'url' => 'https://dev4rweb.com'],
+                ],
+            ],
+        ];
     }
 
     public function escalationMessage(string $language): string
@@ -223,5 +251,19 @@ class ConversationIntakeService
         }
 
         return (bool) preg_match('/^[\p{L}][\p{L}\s\'\-\.]+$/u', $name);
+    }
+
+    private function localizedDemoUrl(string $path, string $language): string
+    {
+        $base = 'https://demo-concierge.dev4rweb.com';
+        $supported = ['en', 'zh', 'fr', 'es', 'ar', 'pt', 'ru'];
+        $locale = in_array($language, $supported, true) ? $language : 'en';
+        $normalized = $path === '' ? '/' : $path;
+
+        if ($locale === 'en') {
+            return $normalized === '/' ? $base : $base.$normalized;
+        }
+
+        return $normalized === '/' ? $base.'/'.$locale : $base.'/'.$locale.$normalized;
     }
 }

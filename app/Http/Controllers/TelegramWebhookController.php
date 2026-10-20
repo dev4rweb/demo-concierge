@@ -70,7 +70,9 @@ class TelegramWebhookController extends Controller
 
             if (strtolower(trim($text)) === '/start') {
                 $welcomeMessage = $this->intakeService->welcomeMessage($language);
-                $this->telegramService->sendMessage($chatId, $welcomeMessage);
+                $this->telegramService->sendMessage($chatId, $welcomeMessage, [
+                    'reply_markup' => $this->intakeService->welcomeKeyboard($language),
+                ]);
 
                 Message::create([
                     'conversation_id' => $conversation->id,
